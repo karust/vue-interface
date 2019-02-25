@@ -2,13 +2,16 @@
 
  <div>
     <v-card class="box">
-      <v-layout row wrap>
-        <v-text-field v-on:keyup.enter="getTiktok" value label="TikTok URL" v-model="ttURL" clearable></v-text-field>
+      <v-layout row wrap justify-center>
+        <v-flex xs8 md8 lg10>
+            <v-text-field v-on:keyup.enter="getTiktok" value label="TikTok URL" v-model="ttURL" clearable></v-text-field>
+        </v-flex>
         <v-btn @click="getTiktok" outline dark large color="blue-grey">
-                <v-icon dark>search</v-icon>
-            </v-btn>
+            <v-icon dark>search</v-icon>
+        </v-btn>
       </v-layout>
-      <v-flex xs12 md10 lg6>
+
+      <v-flex xs12 md12 lg12>
         <v-progress-linear :active="isTT" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <h3 class="text-md-center">
