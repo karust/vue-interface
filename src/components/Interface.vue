@@ -33,7 +33,16 @@
         <v-chip label outline color="red">
           <h3>{{ytRepl}}</h3>
         </v-chip> in replies
-      </h3>   
+      </h3> 
+
+      <v-data-table :headers="headers" :items="nums" class="elevation-1" hide-actions>
+        <template slot="items" slot-scope="props">
+          <td class="text-xs">{{ props.item.one }}</td>
+          <td class="text-xs">{{ props.item.two }}</td>
+          <td class="text-xs">{{ props.item.three }}</td>
+          <td class="text-xs">{{ props.item.four }}</td>
+        </template>
+      </v-data-table>
     </v-card>
   </v-flex>
 
@@ -121,6 +130,22 @@
 <script>
 export default {
   data: () => ({
+
+    headers: [
+          { text: '1', sortable: false, align: 'center'},
+          { text: '2', sortable: false, align: 'center'},
+          { text: '3' , sortable: false, align: 'center'},
+          { text: '4', sortable: false, align: 'center'},
+        ],
+    nums: [
+      {
+      one: 0,
+      two: 0,
+      three: 0,
+      four: 0,
+    }
+    ],
+
     ytURL: "",
     instURL: "",
     ttURL: "",
