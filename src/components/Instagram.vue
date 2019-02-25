@@ -7,7 +7,7 @@
             <v-icon dark>search</v-icon>
         </v-btn>
     </v-layout>
-    <v-flex xs6 md6 offset-xs3>
+    <v-flex xs12 md10 lg6>
     <v-progress-linear color="orange" :active="isIN" :indeterminate="true"></v-progress-linear>
     </v-flex>  
     <h3 class="text-md-center">
@@ -47,6 +47,7 @@ export default {
       four: 0,
     }
     ],
+    numsEmpty: [ { one: 0,two: 0, three: 0, four: 0, }],
 
     instURL: "",
     instComm: 0,
@@ -78,12 +79,14 @@ computed: {
         this.nums[0].two = answer.twos;
         this.nums[0].three = answer.threes;
         this.nums[0].four = answer.fours;
+        eventBus.$emit('successAlert', "Instagram parsing finished")
       } catch (error) {
         /* eslint-disable no-console */
         console.log(`getInstagram got error`, error);
         eventBus.$emit('errorAlert', "Instagram request failed")
         this.isErr = true;
         this.instComm = 0;
+        this.nums = this.numsEmpty;
       } finally {
         this.isIN = false;
       }

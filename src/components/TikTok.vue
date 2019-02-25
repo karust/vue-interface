@@ -8,7 +8,7 @@
                 <v-icon dark>search</v-icon>
             </v-btn>
       </v-layout>
-      <v-flex xs6 md6 offset-xs3>
+      <v-flex xs12 md10 lg6>
         <v-progress-linear :active="isTT" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <h3 class="text-md-center">
@@ -64,6 +64,7 @@ export default {
       four: 0,
     }
     ],
+    numsEmpty: [ { one: 0,two: 0, three: 0, four: 0, }],
 
     ttURL: "",
     ttComm: 0,
@@ -71,6 +72,7 @@ export default {
     dialog: false,
     captcha: "",
   }),
+
 computed: {
   example: {
     cache: false,
@@ -111,6 +113,7 @@ computed: {
             this.nums[0].two = answer.twos;
             this.nums[0].three = answer.threes;
             this.nums[0].four = answer.fours;
+            eventBus.$emit('successAlert', "TikTok parsing finished")
         }
      
       } catch (error) {
@@ -119,6 +122,7 @@ computed: {
         eventBus.$emit('errorAlert', "Tiktok request failed");
         this.isErr = true;
         this.ttComm = 0;
+        this.nums = this.numsEmpty;
       } finally {
         this.isTT = false;
         this.captcha = ""

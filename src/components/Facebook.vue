@@ -2,13 +2,14 @@
       
     <v-card class="box">
       <v-layout row wrap>
+          
         <v-text-field v-on:keyup.enter="getFacebook" value label="Facebook URL" v-model="fbURL" clearable></v-text-field>
         <v-btn @click="getFacebook" outline dark large color="indigo">
                 <v-icon dark>search</v-icon>
             </v-btn>
       </v-layout>
 
-      <v-flex xs6 md6 offset-xs3>
+      <v-flex xs12 md10 lg6>
         <v-progress-linear :active="isFB" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <h3 class="text-md-center">
@@ -51,6 +52,7 @@ export default {
       four: 0,
     }
     ],
+    numsEmpty: [ { one: 0,two: 0, three: 0, four: 0, }],
 
     fbURL: "",
     fbComm: 0,
@@ -85,11 +87,13 @@ computed: {
         this.nums[0].two = answer.twos;
         this.nums[0].three = answer.threes;
         this.nums[0].four = answer.fours;
+        eventBus.$emit('successAlert', "Facebook parsing finished")
       } catch (error) {
         /* eslint-disable no-console */
         console.log(`getFacebook got error`, error);
         eventBus.$emit('errorAlert', "Facebook request failed")
         this.isErr = true;
+         this.nums = this.numsEmpty;
       } finally {
         this.isFB = false;
       }
