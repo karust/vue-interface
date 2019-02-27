@@ -58,6 +58,7 @@ export default {
 
     isIN: false,
     isErr: false,
+    isDone: true,
   }),
 computed: {
   example: {
@@ -70,29 +71,34 @@ computed: {
 
   methods: {
     async getInstagram() {
-      this.isErr = false;
-      this.isIN = true;
-      this.instComm = 0;
-      try {
-        let answer = await this.makeReq({ site:"instagram", url: this.instURL });
-        /* eslint-disable no-console */
-        console.log(`getInstagram got result`, answer);
-        this.instComm = answer.comments;
+      if(this.isDone){
+          this.isDone = false;
+          this.isErr = false;
+          this.isIN = true;
+          this.instComm = 0;
+          try {
+            let answer = await this.makeReq({ site:"instagram", url: this.instURL });
+            /* eslint-disable no-console */
+            console.log(`getInstagram got result`, answer);
+            this.instComm = answer.comments;
 
-        this.nums[0].one = answer.ones;
-        this.nums[0].two = answer.twos;
-        this.nums[0].three = answer.threes;
-        this.nums[0].four = answer.fours;
-        eventBus.$emit('successAlert', "Instagram parsing finished")
-      } catch (error) {
-        /* eslint-disable no-console */
-        console.log(`getInstagram got error`, error);
-        eventBus.$emit('errorAlert', "Instagram request failed")
-        this.isErr = true;
-        this.instComm = 0;
-        this.nums = this.numsEmpty;
-      } finally {
-        this.isIN = false;
+            this.nums[0].one = answer.ones;
+            this.nums[0].two = answer.twos;
+            this.nums[0].three = answer.threes;
+            this.nums[0].four = answer.fours;
+            eventBus.$emit('successAlert', "Instagram parsing finished")
+            
+          } catch (error) {
+            /* eslint-disable no-console */
+            console.log(`getInstagram got error`, error);
+            eventBus.$emit('errorAlert', "Instagram request failed")
+            this.isErr = true;
+            this.instComm = 0;
+            this.nums = this.numsEmpty;
+          } finally {
+            this.isIN = false;
+          }
+       this.isDone = true;
       }
     },
 

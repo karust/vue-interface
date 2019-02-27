@@ -61,6 +61,7 @@ export default {
 
     isFB: false,
     isErr: false,
+    isDone: true,
   }),
 computed: {
   example: {
@@ -73,30 +74,37 @@ computed: {
   methods: {
 
      async getFacebook() {
-      this.isErr = false;
-      this.isFB = true;
-      this.fbComm = 0;
-      this.fbRepl = 0;
-      try {
-        let answer = await this.makeReq({ site:"facebook", url: this.fbURL });
-        /* eslint-disable no-console */
-        console.log(`getFacebook got result`, answer);
-        this.fbComm = answer.comments;
-        this.fbRepl = answer.subcomments;
+        if(this.isDone){
+          this.isDone = false;
+          this.isErr = false;
+          this.isFB = true;
+          this.fbComm = 0;
+          this.fbRepl = 0;
+          try {
+          
+              let answer = await this.makeReq({ site:"facebook", url: this.fbURL });
+              /* eslint-disable no-console */
+              console.log(`getFacebook got result`, answer);
+              this.fbComm = answer.comments;
+              this.fbRepl = answer.subcomments;
 
-        this.nums[0].one = answer.ones;
-        this.nums[0].two = answer.twos;
-        this.nums[0].three = answer.threes;
-        this.nums[0].four = answer.fours;
-        eventBus.$emit('successAlert', "Facebook parsing finished")
-      } catch (error) {
-        /* eslint-disable no-console */
-        console.log(`getFacebook got error`, error);
-        eventBus.$emit('errorAlert', "Facebook request failed")
-        this.isErr = true;
-         this.nums = this.numsEmpty;
-      } finally {
-        this.isFB = false;
+              this.nums[0].one = answer.ones;
+              this.nums[0].two = answer.twos;
+              this.nums[0].three = answer.threes;
+              this.nums[0].four = answer.fours;
+              eventBus.$emit('successAlert', "Facebook parsing finished")
+            
+          } catch (error) {
+            /* eslint-disable no-console */
+            console.log(`getFacebook got error`, error);
+            eventBus.$emit('errorAlert', "Facebook request failed")
+            this.isErr = true;
+            this.nums = this.numsEmpty;
+          } finally {
+            this.isFB = false;
+          }
+
+       this.isDone = true;
       }
     },
 

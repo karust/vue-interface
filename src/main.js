@@ -8,7 +8,7 @@ import 'vuetify/dist/vuetify.min.css'
 
 
 Vue.config.productionTip = false
-Vue.prototype.$hostname = 'http://10.1.1.192:5000/'
+Vue.prototype.$hostname = 'http://188.130.155.59:5000/'
 
 Vue.use(Vuetify)
 Vue.use(VueResource);

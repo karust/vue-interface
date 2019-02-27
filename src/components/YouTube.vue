@@ -58,7 +58,7 @@ export default {
     ytURL: "",
     ytComm: 0,
     ytRepl: 0,
-
+    isDone: true,
     isYT: false,
   }),
 
@@ -73,34 +73,39 @@ computed: {
 
   methods: {
     async getYoutube() {
-      this.isErr = false;
-      this.isYT = true;
-      this.ytComm = 0;
-      this.ytRepl = 0;
-      try {
-        let answer = await this.makeReq({ site:"youtube", url: this.ytURL });
-        /* eslint-disable no-console */
-        console.log(`getYoutube got result`, answer);
-        this.ytComm = answer.comments;
-        this.ytRepl = answer.subcomments;
-
-        this.nums[0].one = answer.ones;
-        this.nums[0].two = answer.twos;
-        this.nums[0].three = answer.threes;
-        this.nums[0].four = answer.fours;
-        eventBus.$emit('successAlert', "YouTube parsing finished")
-
-      } catch (error) {
-        /* eslint-disable no-console */
-        console.log(`getYoutube got error`, error);
-        eventBus.$emit('errorAlert', "YouTube request failed")
-        this.isErr = true;
+      if(this.isDone==true){
+        this.isDone = false;
+        
+        this.isErr = false;
+        this.isYT = true;
         this.ytComm = 0;
         this.ytRepl = 0;
-        this.nums = this.numsEmpty;
 
-      } finally {
-        this.isYT = false;
+        try {        
+          let answer = await this.makeReq({ site:"youtube", url: this.ytURL });
+          /* eslint-disable no-console */
+          console.log(`getYoutube got result`, answer);
+          this.ytComm = answer.comments;
+          this.ytRepl = answer.subcomments;
+
+          this.nums[0].one = answer.ones;
+          this.nums[0].two = answer.twos;
+          this.nums[0].three = answer.threes;
+          this.nums[0].four = answer.fours;
+          eventBus.$emit('successAlert', "YouTube parsing finished")
+        } catch (error) {
+          /* eslint-disable no-console */
+          console.log(`getYoutube got error`, error);
+          eventBus.$emit('errorAlert', "YouTube request failed")
+          this.isErr = true;
+          this.ytComm = 0;
+          this.ytRepl = 0;
+          this.nums = this.numsEmpty;
+        } finally {
+          this.isYT = false;
+        }
+
+       this.isDone = true;
       }
     },
 

@@ -74,6 +74,7 @@ export default {
     isTT: false,
     dialog: false,
     captcha: "",
+    isDone: true,
   }),
 
 computed: {
@@ -91,44 +92,48 @@ computed: {
     },
 
     async getTiktok(_captcha) {
-      this.ttComm = 0;
-      // Kostyl, call from search button
-      if(typeof(_captcha)== "object"){
-        _captcha=""
-        this.captcha = ""
-      }
-
-      this.isErr = false;
-      this.isTT = true;
-      
-      try {
-        let answer = await this.makeReqTikt({ site:"tiktok", 
-        url: this.ttURL, captcha: _captcha});
-        /* eslint-disable no-console */
-        if (answer.captcha == "image"){
-          this.dialog = true;
-          //console.log("Answer: "+ answer)
-          let img = document.getElementById("image");
-          img.src = this.$hostname+"captcha/cp.png?dummy="+ Math.random(0, 1000)
-        } else {
-            this.ttComm = answer.comments;
-            this.nums[0].one = answer.ones;
-            this.nums[0].two = answer.twos;
-            this.nums[0].three = answer.threes;
-            this.nums[0].four = answer.fours;
-            eventBus.$emit('successAlert', "TikTok parsing finished")
-        }
-     
-      } catch (error) {
-        /* eslint-disable no-console */
-        console.log(`getTiktok got error`, error);
-        eventBus.$emit('errorAlert', "Tiktok request failed");
-        this.isErr = true;
+      if(this.isDone){
+        this.isDone = false;
         this.ttComm = 0;
-        this.nums = this.numsEmpty;
-      } finally {
-        this.isTT = false;
-        this.captcha = ""
+
+        // Kostyl, call from search button
+        if(typeof(_captcha)== "object"){
+          _captcha=""
+          this.captcha = ""
+        }
+
+        this.isErr = false;
+        this.isTT = true;
+        try {    
+          let answer = await this.makeReqTikt({ site:"tiktok", 
+          url: this.ttURL, captcha: _captcha});
+          /* eslint-disable no-console */
+          if (answer.captcha == "image"){
+            this.dialog = true;
+            //console.log("Answer: "+ answer)
+            let img = document.getElementById("image");
+            img.src = this.$hostname+"captcha/cp.png?dummy="+ Math.random(0, 1000)
+          } else {
+              this.ttComm = answer.comments;
+              this.nums[0].one = answer.ones;
+              this.nums[0].two = answer.twos;
+              this.nums[0].three = answer.threes;
+              this.nums[0].four = answer.fours;
+              eventBus.$emit('successAlert', "TikTok parsing finished")
+          }
+        } catch (error) {
+          /* eslint-disable no-console */
+          console.log(`getTiktok got error`, error);
+          eventBus.$emit('errorAlert', "Tiktok request failed");
+          this.isErr = true;
+          this.ttComm = 0;
+          this.nums = this.numsEmpty;
+        } finally {
+          this.isTT = false;
+          this.captcha = ""
+        }
+
+        this.isDone = true;
       }
     },
 
