@@ -1,21 +1,22 @@
 <template>
 
-    <v-card class="box">
+    <v-card class="box" hover>
     <v-layout row wrap justify-center>
-        <v-flex xs8 md8 lg10>
-            <v-text-field v-on:keyup.enter="getInstagram" value label="Instagram URL" v-model="instURL" clearable></v-text-field>
-        </v-flex>
-        <v-btn @click="getInstagram" outline dark large color="orange">
+      <img src="@/assets/in.png" style="margin-right: 20px; margin-top: 12px;" width="40" height="40">
+      <v-flex xs8 md8 lg8>
+          <v-text-field color="#833AB4" v-on:keyup.enter="getInstagram" value label="Instagram URL" v-model="instURL" clearable></v-text-field>
+      </v-flex>
+      <v-btn @click="getInstagram" outline dark large color="#833AB4">
             <v-icon dark>search</v-icon>
         </v-btn>
     </v-layout>
 
     <v-flex xs12 md12 lg12>
-    <v-progress-linear color="orange" :active="isIN" :indeterminate="true"></v-progress-linear>
+    <v-progress-linear color="#833AB4" :active="isIN" :indeterminate="true"></v-progress-linear>
     </v-flex> 
 
     <h3 class="text-md-center">
-    <v-chip label outline color="orange">
+    <v-chip label outline color="#833AB4">
         <h3>{{instComm}}</h3>
     </v-chip> in commnets
     </h3>
@@ -51,7 +52,7 @@ export default {
       four: 0,
     }
     ],
-    numsEmpty: [ { one: 0,two: 0, three: 0, four: 0, }],
+    numsEmpty: [ { one: 0, two: 0, three: 0, four: 0, }],
 
     instURL: "",
     instComm: 0,
@@ -82,6 +83,11 @@ computed: {
             console.log(`getInstagram got result`, answer);
             this.instComm = answer.comments;
 
+            eventBus.$emit('inResult', answer.ones-this.nums[0].one,
+                                       answer.twos-this.nums[0].two,
+                                       answer.threes-this.nums[0].three,
+                                       answer.fours-this.nums[0].four)
+
             this.nums[0].one = answer.ones;
             this.nums[0].two = answer.twos;
             this.nums[0].three = answer.threes;
@@ -92,6 +98,14 @@ computed: {
             /* eslint-disable no-console */
             console.log(`getInstagram got error`, error);
             eventBus.$emit('errorAlert', "Instagram request failed")
+            eventBus.$emit('inResult', 0-this.nums[0].one,
+                                       0-this.nums[0].two,
+                                       0-this.nums[0].three,
+                                       0-this.nums[0].four)
+            this.nums[0].one = 0;
+            this.nums[0].two = 0;
+            this.nums[0].three = 0;
+            this.nums[0].four = 0;
             this.isErr = true;
             this.instComm = 0;
             this.nums = this.numsEmpty;

@@ -1,11 +1,12 @@
 <template>
       
-    <v-card class="box">
+    <v-card class="box" hover>
       <v-layout row wrap justify-center>
-        <v-flex xs8 md8 lg10>
-            <v-text-field v-on:keyup.enter="getFacebook" value label="Facebook URL" v-model="fbURL" clearable></v-text-field>
+        <img src="@/assets/fb.png" style="margin-right: 20px; margin-top: 9px;" width="40" height="40">
+        <v-flex xs8 md8 lg8>
+            <v-text-field color="#3C5898" v-on:keyup.enter="getFacebook" value label="Facebook URL" v-model="fbURL" clearable></v-text-field>
         </v-flex>
-        <v-btn @click="getFacebook" outline dark large color="indigo">
+        <v-btn @click="getFacebook" outline dark large color="#3C5898">
             <v-icon dark>search</v-icon>
         </v-btn>
       </v-layout>
@@ -14,10 +15,10 @@
         <v-progress-linear :active="isFB" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <h3 class="text-md-center">
-        <v-chip label outline color="indigo">
+        <v-chip label outline color="#3C5898">
           <h3>{{fbComm}}</h3>
         </v-chip> in comments
-        <v-chip label outline color="indigo">
+        <v-chip label outline color="#3C5898">
           <h3>{{fbRepl}}</h3>
         </v-chip> in replies
       </h3>
@@ -88,6 +89,11 @@ computed: {
               this.fbComm = answer.comments;
               this.fbRepl = answer.subcomments;
 
+              eventBus.$emit('fbResult', answer.ones-this.nums[0].one,
+                                         answer.twos-this.nums[0].two,
+                                         answer.threes-this.nums[0].three,
+                                         answer.fours-this.nums[0].four)
+
               this.nums[0].one = answer.ones;
               this.nums[0].two = answer.twos;
               this.nums[0].three = answer.threes;
@@ -98,6 +104,14 @@ computed: {
             /* eslint-disable no-console */
             console.log(`getFacebook got error`, error);
             eventBus.$emit('errorAlert', "Facebook request failed")
+            eventBus.$emit('fbResult', 0-this.nums[0].one,
+                                       0-this.nums[0].two,
+                                       0-this.nums[0].three,
+                                       0-this.nums[0].four)
+            this.nums[0].one = 0;
+            this.nums[0].two = 0;
+            this.nums[0].three = 0;
+            this.nums[0].four = 0;
             this.isErr = true;
             this.nums = this.numsEmpty;
           } finally {

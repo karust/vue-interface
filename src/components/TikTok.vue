@@ -1,21 +1,22 @@
 <template>
 
  <div>
-    <v-card class="box">
+    <v-card class="box" hover>
       <v-layout row wrap justify-center>
-        <v-flex xs8 md8 lg10>
-            <v-text-field v-on:keyup.enter="getTiktok" value label="TikTok URL" v-model="ttURL" clearable></v-text-field>
+        <img src="@/assets/tt.png" style="margin-right: 20px; margin-top: 9px;" width="40" height="40">
+        <v-flex xs8 md8 lg8>
+          <v-text-field color="#69C9D0" v-on:keyup.enter="getTiktok" value label="TikTok URL" v-model="ttURL" clearable></v-text-field>
         </v-flex>
-        <v-btn @click="getTiktok" outline dark large color="blue-grey">
+        <v-btn @click="getTiktok" outline dark large color="#69C9D0">
             <v-icon dark>search</v-icon>
         </v-btn>
       </v-layout>
 
       <v-flex xs12 md12 lg12>
-        <v-progress-linear :active="isTT" :indeterminate="true"></v-progress-linear>
+        <v-progress-linear color="#69C9D0" :active="isTT" :indeterminate="true"></v-progress-linear>
       </v-flex>
       <h3 class="text-md-center">
-        <v-chip label outline color="blue-grey">
+        <v-chip label outline color="#69C9D0">
           <h3>{{ttComm}}</h3>
         </v-chip> in comments
       </h3>
@@ -39,7 +40,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue-grey" @click="captchaEnter" @keyup.enter="captchaEnter"> Enter</v-btn>
+          <v-btn color="#69C9D0" @click="captchaEnter" @keyup.enter="captchaEnter"> Enter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>  
@@ -114,6 +115,11 @@ computed: {
             let img = document.getElementById("image");
             img.src = this.$hostname+"captcha/cp.png?dummy="+ Math.random(0, 1000)
           } else {
+              eventBus.$emit('ttResult', answer.ones-this.nums[0].one,
+                                         answer.twos-this.nums[0].two,
+                                         answer.threes-this.nums[0].three,
+                                         answer.fours-this.nums[0].four)
+
               this.ttComm = answer.comments;
               this.nums[0].one = answer.ones;
               this.nums[0].two = answer.twos;
@@ -125,6 +131,14 @@ computed: {
           /* eslint-disable no-console */
           console.log(`getTiktok got error`, error);
           eventBus.$emit('errorAlert', "Tiktok request failed");
+          eventBus.$emit('ttResult', 0-this.nums[0].one,
+                                     0-this.nums[0].two,
+                                     0-this.nums[0].three,
+                                     0-this.nums[0].four)
+          this.nums[0].one = 0;
+          this.nums[0].two = 0;
+          this.nums[0].three = 0;
+          this.nums[0].four = 0;
           this.isErr = true;
           this.ttComm = 0;
           this.nums = this.numsEmpty;

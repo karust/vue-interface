@@ -1,31 +1,9 @@
 <template>
-
-    <v-card class="box" hover>
-        <v-layout row wrap justify-center>
-           <img src="@/assets/yt.png" style="margin-right: 20px; margin-top: 12px;" width="45" height="40">
-            <v-flex xs8 md8 lg8>
-                <v-text-field color="#CD201F" v-on:keyup.enter="getYoutube" value label="YouTube URL" v-model="ytURL" clearable ></v-text-field>    
-            </v-flex>
-            <v-btn @click="getYoutube" outline dark large color="#CD201F">
-                <v-icon dark>search</v-icon>
-            </v-btn>
-        </v-layout>
-
-        <v-flex xs12 md12 lg12>
-          <v-progress-linear color="#CD201F" :active="isYT" :indeterminate="true"></v-progress-linear>
-        </v-flex> 
-        <h3 class="text-md-center">
-        <v-chip label outline color="#CD201F">
-            <h3>{{ytComm}}</h3>
-        </v-chip> in comments
-        <v-chip label outline color="#CD201F">
-            <h3>{{ytRepl}}</h3>
-        </v-chip> in replies
-        </h3> 
-
-        <v-data-table  :headers="headers" :items="nums" hide-actions >
-        <template slot="items" slot-scope="props" >
-            <td  class="text-xs">{{ props.item.one }}</td>
+    <v-card class="box" hover >
+         <v-toolbar-title>Overall</v-toolbar-title>
+        <v-data-table :headers="headers" :items="nums" hide-actions>
+        <template slot="items" slot-scope="props">
+            <td class="text-xs">{{ props.item.one }}</td>
             <td class="text-xs">{{ props.item.two }}</td>
             <td class="text-xs">{{ props.item.three }}</td>
             <td class="text-xs">{{ props.item.four }}</td>
@@ -45,17 +23,11 @@ export default {
           { text: '1', sortable: false, align: 'center'},
           { text: '2', sortable: false, align: 'center'},
           { text: '3' , sortable: false, align: 'center'},
-          { text: '4', sortable: false, align: 'center'},
-        ],
-    nums: [
-      {
-      one: 0,
-      two: 0,
-      three: 0,
-      four: 0,
-    }
-    ],
-  numsEmpty: [ { one: 0,two: 0, three: 0, four: 0, }],
+          { text: '4', sortable: false, align: 'center'},],
+
+    nums: [{ one: 0,two: 0, three: 0, four: 0, },],
+    numsEmpty: [{one: 0,two: 0, three: 0, four: 0, },],
+
     ytURL: "",
     ytComm: 0,
     ytRepl: 0,
@@ -89,11 +61,6 @@ computed: {
           this.ytComm = answer.comments;
           this.ytRepl = answer.subcomments;
 
-           eventBus.$emit('ytResult', answer.ones-this.nums[0].one,
-                                       answer.twos-this.nums[0].two,
-                                       answer.threes-this.nums[0].three,
-                                       answer.fours-this.nums[0].four)
-
           this.nums[0].one = answer.ones;
           this.nums[0].two = answer.twos;
           this.nums[0].three = answer.threes;
@@ -103,14 +70,6 @@ computed: {
           /* eslint-disable no-console */
           console.log(`getYoutube got error`, error);
           eventBus.$emit('errorAlert', "YouTube request failed")
-          eventBus.$emit('ytResult', 0-this.nums[0].one,
-                                       0-this.nums[0].two,
-                                       0-this.nums[0].three,
-                                       0-this.nums[0].four)
-          this.nums[0].one = 0;
-          this.nums[0].two = 0;
-          this.nums[0].three = 0;
-          this.nums[0].four = 0;
           this.isErr = true;
           this.ytComm = 0;
           this.ytRepl = 0;
@@ -140,6 +99,36 @@ computed: {
           });
       });
     },
+  },
+
+  created(){
+    eventBus.$on('ytResult', (ones, twos, threes, fours) => {
+      this.nums[0].one += ones;
+      this.nums[0].two += twos;
+      this.nums[0].three += threes;
+      this.nums[0].four += fours;
+    });
+
+    eventBus.$on('inResult', (ones, twos, threes, fours) => {
+      this.nums[0].one += ones;
+      this.nums[0].two += twos;
+      this.nums[0].three += threes;
+      this.nums[0].four += fours;
+    });
+
+    eventBus.$on('ttResult', (ones, twos, threes, fours) => {
+      this.nums[0].one += ones;
+      this.nums[0].two += twos;
+      this.nums[0].three += threes;
+      this.nums[0].four += fours;
+    });
+
+    eventBus.$on('fbResult', (ones, twos, threes, fours) => {
+      this.nums[0].one += ones;
+      this.nums[0].two += twos;
+      this.nums[0].three += threes;
+      this.nums[0].four += fours;
+    });
   }
 };
 </script>
